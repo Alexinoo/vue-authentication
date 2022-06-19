@@ -11,19 +11,18 @@ export default {
             })
         });
 
-        const responseData = response.json()
+        const responseData = await response.json()
 
         if (!response.ok) {
-            console.log(responseData);
             const error = new Error(responseData.message || 'Invalid Credentials')
             throw error;
         }
 
         context.commit('setUser', {
-            token: responseData.idToken,
             userId: responseData.localId,
+            token: responseData.idToken,
             tokenExpiration: responseData.expiresIn
-        })
+        } )
     },
 
     async signup(context, payload) {
@@ -37,7 +36,7 @@ export default {
             })
         });
 
-        const responseData = response.json()
+        const responseData = await response.json()
 
         if (!response.ok) {
             console.log(responseData);
