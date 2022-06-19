@@ -70,16 +70,20 @@ export default {
 
             this.isLoading = true
 
+            const userCredentials = {
+                email: this.email,
+                password: this.password
+            }
+
             try {
 
                     if(this.mode === 'login'){
-                        //...
+                      
+                        await this.$store.dispatch('login', userCredentials)
+
                     }else{
 
-                  await  this.$store.dispatch('signup', {
-                        email: this.email,
-                        password: this.password
-                    })
+                        await this.$store.dispatch('signup', userCredentials)
                 } 
               
             } catch (err) {
