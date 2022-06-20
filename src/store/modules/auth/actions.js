@@ -1,3 +1,5 @@
+
+let timer;
 export default {
 
     async login(context , payload) {
@@ -49,6 +51,10 @@ export default {
         localStorage.setItem('userId', responseData.localId)
         localStorage.setItem('tokenExpiration', expirationDate)
 
+        timer = setTimeout(function(){
+            context.dispatch('logout')
+        } , expiresIn)
+
         context.commit('setUser', {
             userId: responseData.localId,
             token: responseData.idToken,
@@ -72,11 +78,13 @@ export default {
 
         localStorage.removeItem('token')
         localStorage.removeItem('userId')
+        localStorage.removeItem('tokenExpiration')
+
+        clearTimeout(timer)
 
         context.commit('setUser',{
             token : null,
             userId : null,
-            tokenExpiration : null,
         })
 
     }
