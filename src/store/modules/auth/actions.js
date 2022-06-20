@@ -43,8 +43,8 @@ export default {
             throw error;
         }
 
-        // const expiresIn = +responseData.expiresIn * 1000;
-        const expiresIn = 10000;
+        const expiresIn = +responseData.expiresIn * 1000;
+        // const expiresIn = 5000;
 
         const expirationDate = new Date().getTime() + expiresIn;
 
@@ -53,7 +53,7 @@ export default {
         localStorage.setItem('tokenExpiration', expirationDate)
 
         timer = setTimeout(function(){
-            context.dispatch('logout')
+            context.dispatch('autoLogout')
         } , expiresIn)
 
         context.commit('setUser', {
@@ -74,8 +74,9 @@ export default {
             return;
         }
 
+        //if the timer is valid - set a timeout 
         timer = setTimeout(function(){
-            context.dispatch('logout')
+            context.dispatch('autoLogout')
         } , expiresIn )
 
         if(token && userId){
@@ -99,5 +100,10 @@ export default {
             userId : null,
         })
 
+    },
+
+    autoLogout(context){
+        context.dispatch('logout')
+        context.commit('setAutoLogout')
     }
 }
