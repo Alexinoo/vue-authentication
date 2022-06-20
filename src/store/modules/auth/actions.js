@@ -43,7 +43,8 @@ export default {
             throw error;
         }
 
-        const expiresIn = +responseData.expiresIn * 1000;
+        // const expiresIn = +responseData.expiresIn * 1000;
+        const expiresIn = 10000;
 
         const expirationDate = new Date().getTime() + expiresIn;
 
@@ -65,6 +66,17 @@ export default {
     tryLogin(context){
         const token = localStorage.getItem('token')
         const userId = localStorage.getItem('userId')
+        const tokenExpiration = localStorage.getItem('tokenExpiration')
+
+        const expiresIn = +tokenExpiration - new Date().getTime()
+
+        if(expiresIn < 0){
+            return;
+        }
+
+        timer = setTimeout(function(){
+            context.dispatch('logout')
+        } , expiresIn )
 
         if(token && userId){
             context.commit('setUser' , {
