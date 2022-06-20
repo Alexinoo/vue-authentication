@@ -41,13 +41,17 @@ export default {
             throw error;
         }
 
+        const expiresIn = +responseData.expiresIn * 1000;
+
+        const expirationDate = new Date().getTime() + expiresIn;
+
         localStorage.setItem('token', responseData.idToken)
         localStorage.setItem('userId', responseData.localId)
+        localStorage.setItem('tokenExpiration', expirationDate)
 
         context.commit('setUser', {
             userId: responseData.localId,
             token: responseData.idToken,
-            tokenExpiration: responseData.expiresIn
         })
 
     },
@@ -59,13 +63,15 @@ export default {
         if(token && userId){
             context.commit('setUser' , {
                 token,
-                userId,
-                tokenExpiration : null
+                userId
             })
         }
     },
 
     logout(context){
+
+        localStorage.removeItem('token')
+        localStorage.removeItem('userId')
 
         context.commit('setUser',{
             token : null,
